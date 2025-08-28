@@ -49,7 +49,8 @@ Or run the script directly:
 ## What It Detects
 
 - **GPL** (v1, v2, v3) - GNU General Public License
-- **AGPL** (v1, v3) - GNU Affero General Public License
+- **AGPL** (v1, v3) - GNU Affero General Public License  
+- **QPL** - Q Public License (Qt Public License)
 - **GPL with Classpath Exception** - Allowed (common in Java)
 
 ## Example: GPL with Classpath Exception (Allowed)

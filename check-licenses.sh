@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Copyleft License Checker
-# Checks changed files for strong copyleft licenses (GPL, AGPL)
+# Checks changed files for strong copyleft licenses (GPL, AGPL, QPL)
 # Allows GPL with Classpath Exception
 
 set -euo pipefail
@@ -41,6 +41,15 @@ AGPL_PATTERNS=(
     "licensed under.*AGPL"
     "under the AGPL"
     "AGPL licensed"
+)
+
+QPL_PATTERNS=(
+    "Q Public License"
+    "QPL"
+    "Qt Public License"
+    "licensed under.*QPL"
+    "under the QPL"
+    "QPL licensed"
 )
 
 
@@ -112,7 +121,13 @@ check_file_for_licenses() {
         fi
     done
     
-
+    # Check for QPL patterns
+    for pattern in "${QPL_PATTERNS[@]}"; do
+        if echo "$file_content" | grep -qi -E "$pattern"; then
+            found_licenses+=("QPL")
+            break
+        fi
+    done
     
     # Report findings
     if [[ ${#found_licenses[@]} -gt 0 ]]; then
@@ -126,6 +141,9 @@ check_file_for_licenses() {
                     ;;
                 "AGPL")
                     patterns=("${AGPL_PATTERNS[@]}")
+                    ;;
+                "QPL")
+                    patterns=("${QPL_PATTERNS[@]}")
                     ;;
             esac
             
