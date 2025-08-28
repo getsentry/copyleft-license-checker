@@ -1,0 +1,21 @@
+name: 'Copyleft License Checker'
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check-licenses:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run Copyleft License Checker
+      uses: ./
+      with:
+        exclude-patterns: '*.md,*.txt,LICENSE*,COPYING*,docs/*'
+        fail-on-found: 'true'

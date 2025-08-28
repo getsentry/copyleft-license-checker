@@ -1,0 +1,37 @@
+name: 'Copyleft License Checker'
+description: 'Check changed files for strong copyleft licenses (GPL, AGPL) while allowing GPL with Classpath Exception'
+author: 'GitHub Action'
+
+inputs:
+  exclude-patterns:
+    description: 'Comma-separated list of file patterns to exclude (e.g., "*.md,docs/*")'
+    required: false
+    default: '*.md,*.txt,LICENSE*,COPYING*,docs/*'
+  fail-on-found:
+    description: 'Whether to fail the action when copyleft licenses are found'
+    required: false
+    default: 'true'
+
+outputs:
+  licenses-found:
+    description: 'Whether any copyleft licenses were found'
+  found-files:
+    description: 'JSON array of files containing copyleft licenses'
+  summary:
+    description: 'Summary of the license check results'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Check for copyleft licenses
+      shell: bash
+      run: |
+        echo "Starting copyleft license check..."
+        ${{ github.action_path }}/check-licenses.sh
+      env:
+        EXCLUDE_PATTERNS: ${{ inputs.exclude-patterns }}
+        FAIL_ON_FOUND: ${{ inputs.fail-on-found }}
+
+branding:
+  icon: 'shield'
+  color: 'red'
