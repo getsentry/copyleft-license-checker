@@ -52,6 +52,27 @@ Or run the script directly:
 - **AGPL** (v1, v3) - GNU Affero General Public License
 - **GPL with Classpath Exception** - Allowed (common in Java)
 
+## Example: GPL with Classpath Exception (Allowed)
+
+```java
+/*
+ * Copyright (c) 2023 Example Corp. All rights reserved.
+ * 
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Example Corp designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * version 2 for more details.
+ */
+```
+
+This would be **allowed** because it contains "Classpath exception".
+
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
