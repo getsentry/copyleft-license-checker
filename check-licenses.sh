@@ -150,7 +150,7 @@ check_file_for_licenses() {
 main() {
     echo -e "${BLUE}Copyleft License Checker${NC}"
     echo "=========================="
-    echo "Checking for: GPL, AGPL$([ "$CHECK_LGPL" == "true" ] && echo ", LGPL")"
+    echo "Checking for: GPL, AGPL"
     echo "Excluding patterns: $EXCLUDE_PATTERNS"
     echo ""
     

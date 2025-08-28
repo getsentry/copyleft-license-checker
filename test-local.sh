@@ -18,15 +18,6 @@ fi
 
 echo "Test 1: Default settings (should find GPL and AGPL violations)"
 echo "================================================================"
-export CHECK_LGPL=false
-export EXCLUDE_PATTERNS="*.md,*.txt,LICENSE*,COPYING*,docs/*,*.rst"
-export FAIL_ON_FOUND=false
-./check-licenses.sh
-echo ""
-
-echo "Test 2: With LGPL checking enabled (should also find LGPL violations)"
-echo "====================================================================="
-export CHECK_LGPL=true
 export EXCLUDE_PATTERNS="*.md,*.txt,LICENSE*,COPYING*,docs/*,*.rst"
 export FAIL_ON_FOUND=false
 ./check-licenses.sh
@@ -34,7 +25,6 @@ echo ""
 
 echo "Test 3: Custom excludes (should exclude GPL violation file)"
 echo "=========================================================="
-export CHECK_LGPL=false
 export EXCLUDE_PATTERNS="*.md,*.txt,LICENSE*,COPYING*,docs/*,*.rst,test-files/gpl-violation.java"
 export FAIL_ON_FOUND=false
 ./check-licenses.sh
@@ -42,7 +32,6 @@ echo ""
 
 echo "Test 4: Fail on found (should exit with code 1)"
 echo "==============================================="
-export CHECK_LGPL=false
 export EXCLUDE_PATTERNS="*.md,*.txt,LICENSE*,COPYING*,docs/*,*.rst"
 export FAIL_ON_FOUND=true
 echo "Note: This test will exit with code 1 if violations are found"
