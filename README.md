@@ -75,4 +75,4 @@ This would be **allowed** because it contains "Classpath exception".
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+Apache License 2.0 - see [LICENSE](LICENSE) for details.
