@@ -16,6 +16,7 @@ NC='\033[0m' # No Color
 # Configuration from environment variables
 EXCLUDE_PATTERNS=${EXCLUDE_PATTERNS:-"*.md,*.txt,LICENSE*,COPYING*,docs/*,*.rst"}
 FAIL_ON_FOUND=${FAIL_ON_FOUND:-true}
+ALLOW_GPL_CLASSPATH=${ALLOW_GPL_CLASSPATH:-true}
 
 # Convert comma-separated exclude patterns to array
 IFS=',' read -ra EXCLUDE_ARRAY <<< "$EXCLUDE_PATTERNS"
@@ -99,8 +100,8 @@ check_file_for_licenses() {
     # Read file content
     file_content=$(cat "$file" 2>/dev/null || echo "")
     
-    # Check if file has exceptions first
-    if has_exception "$file_content"; then
+    # Check if file has exceptions first (only if GPL classpath is allowed)
+    if [[ "$ALLOW_GPL_CLASSPATH" == "true" ]] && has_exception "$file_content"; then
         echo -e "${BLUE}INFO:${NC} $file contains GPL with Classpath Exception (allowed)"
         return 0
     fi
@@ -168,8 +169,9 @@ check_file_for_licenses() {
 main() {
     echo -e "${BLUE}Copyleft License Checker${NC}"
     echo "=========================="
-    echo "Checking for: GPL, AGPL"
+    echo "Checking for: GPL, AGPL, QPL"
     echo "Excluding patterns: $EXCLUDE_PATTERNS"
+    echo "Allow GPL with Classpath Exception: $ALLOW_GPL_CLASSPATH"
     echo ""
     
     local files_with_licenses=()

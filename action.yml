@@ -11,6 +11,10 @@ inputs:
     description: 'Whether to fail the action when copyleft licenses are found'
     required: false
     default: 'true'
+  allow-gpl-classpath:
+    description: 'Whether to allow GPL with Classpath Exception (if false, treats GPL with Classpath Exception as violation)'
+    required: false
+    default: 'true'
 
 outputs:
   licenses-found:
@@ -31,6 +35,7 @@ runs:
       env:
         EXCLUDE_PATTERNS: ${{ inputs.exclude-patterns }}
         FAIL_ON_FOUND: ${{ inputs.fail-on-found }}
+        ALLOW_GPL_CLASSPATH: ${{ inputs.allow-gpl-classpath }}
 
 branding:
   icon: 'shield'
