@@ -1,0 +1,207 @@
+# Copyleft License Checker - Cursor Rules
+
+## Project Overview
+This is a GitHub Action that detects copyleft licenses (GPL, AGPL, QPL) in code files. It supports configurable handling of GPL with Classpath Exception and can be used both in GitHub Actions and locally.
+
+## Key Files
+- `check-licenses.sh` - Main license detection script
+- `action.yml` - GitHub Action configuration
+- `test-files/` - Test files with various license types
+- `README.md` - Documentation
+
+## Adding New License Types
+
+### 1. Define License Patterns
+In `check-licenses.sh`, add new pattern arrays following this format:
+
+```bash
+# Example for new license type
+NEW_LICENSE_PATTERNS=(
+    "License Name Pattern"
+    "LICENSE-VERSION"
+    "License v[0-9]"
+    "LicenseVERSION"
+    "licensed under.*LICENSE"
+    "under the LICENSE"
+    "LICENSE licensed"
+)
+```
+
+### 2. Add Detection Logic
+In the `check_file_for_licenses()` function, add detection logic:
+
+```bash
+# Check for NEW_LICENSE patterns
+for pattern in "${NEW_LICENSE_PATTERNS[@]}"; do
+    if echo "$file_content" | grep -qi -E "$pattern"; then
+        found_licenses+=("NEW_LICENSE")
+        break
+    fi
+done
+```
+
+### 3. Add Display Logic
+In the license reporting section, add a case for the new license:
+
+```bash
+case $license in
+    "GPL")
+        patterns=("${GPL_PATTERNS[@]}")
+        ;;
+    "NEW_LICENSE")
+        patterns=("${NEW_LICENSE_PATTERNS[@]}")
+        ;;
+esac
+```
+
+### 4. Update Documentation
+- Update `README.md` "What It Detects" section
+- Update the main description if needed
+- Add example files to `test-files/` directory
+
+## Adding New Exception Types
+
+### 1. Define Exception Patterns
+Add to the `EXCEPTION_PATTERNS` array in `check-licenses.sh`:
+
+```bash
+EXCEPTION_PATTERNS=(
+    # Existing patterns...
+    "New Exception Pattern"
+    "Exception.*keyword"
+)
+```
+
+### 2. Create Configuration Option (if needed)
+If the exception should be configurable:
+
+1. Add input to `action.yml`:
+```yaml
+allow-new-exception:
+  description: 'Allow new exception type'
+  required: false
+  default: 'true'
+```
+
+2. Add environment variable to `action.yml`:
+```yaml
+env:
+  ALLOW_NEW_EXCEPTION: ${{ inputs.allow-new-exception }}
+```
+
+3. Add configuration variable to `check-licenses.sh`:
+```bash
+ALLOW_NEW_EXCEPTION=${ALLOW_NEW_EXCEPTION:-true}
+```
+
+4. Update exception checking logic:
+```bash
+if [[ "$ALLOW_NEW_EXCEPTION" == "true" ]] && has_new_exception "$file_content"; then
+    echo -e "${BLUE}INFO:${NC} $file contains New Exception (allowed)"
+    return 0
+fi
+```
+
+## Testing Guidelines
+
+### 1. Create Test Files
+Add test files to `test-files/` directory:
+- `new-license-violation.ext` - File with the new license
+- `new-exception-allowed.ext` - File with new exception (if applicable)
+
+### 2. Test Locally
+```bash
+# Test default behavior
+./check-licenses.sh
+
+# Test with new configuration (if added)
+ALLOW_NEW_EXCEPTION=false ./check-licenses.sh
+```
+
+### 3. Update Test Script
+If there's a test script, update it to include new test cases.
+
+## Code Style Guidelines
+
+### 1. Pattern Matching
+- Use case-insensitive regex patterns (`grep -qi -E`)
+- Include common variations of license names
+- Test patterns with real-world license text
+
+### 2. Variable Naming
+- Use UPPERCASE for environment variables and arrays
+- Use descriptive names (e.g., `GPL_PATTERNS` not `GP`)
+- Follow existing naming conventions
+
+### 3. Error Handling
+- Always check if files exist before reading
+- Handle empty files gracefully
+- Provide clear error messages
+
+### 4. Output Formatting
+- Use color codes for different message types:
+  - `${RED}` for violations
+  - `${BLUE}` for info messages
+  - `${YELLOW}` for warnings
+  - `${GREEN}` for success
+- Include file names and line numbers in output
+
+## Configuration Best Practices
+
+### 1. Backward Compatibility
+- Always provide sensible defaults
+- New options should not break existing workflows
+- Document migration steps if breaking changes are needed
+
+### 2. Environment Variables
+- Use `${VAR:-default}` syntax for defaults
+- Document all environment variables
+- Keep variable names consistent with input names
+
+### 3. GitHub Action Inputs
+- Provide clear descriptions
+- Set appropriate defaults
+- Mark required vs optional inputs
+
+## Common Patterns
+
+### 1. License Detection Pattern
+```bash
+LICENSE_PATTERNS=(
+    "Full License Name"
+    "LICENSE-[0-9]\.[0-9]"
+    "LICENSE v[0-9]"
+    "LICENSEv[0-9]"
+    "licensed under.*LICENSE"
+)
+```
+
+### 2. Exception Detection Pattern
+```bash
+EXCEPTION_PATTERNS=(
+    "LICENSE.*[Ee]xception [Tt]ype"
+    "with the Exception Type"
+    "Exception Type to the LICENSE"
+)
+```
+
+### 3. Configuration Variable Pattern
+```bash
+ALLOW_FEATURE=${ALLOW_FEATURE:-true}
+```
+
+## File Organization
+
+- Keep license patterns at the top of the script
+- Group related functions together
+- Maintain consistent indentation (4 spaces)
+- Add comments for complex regex patterns
+
+## Documentation Requirements
+
+When adding new features:
+1. Update `README.md` with new inputs/options
+2. Add usage examples
+3. Update the "What It Detects" section
+4. Add configuration examples if applicable
+5. Update this `.cursorrules` file if the process changes
